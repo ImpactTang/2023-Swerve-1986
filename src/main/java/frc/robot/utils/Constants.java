@@ -42,6 +42,17 @@ public final class Constants {
         public static final double rotatekP = 0.5;
         public static final double rotatekI = 0;
         public static final double rotatekD = 0;
+        public static final double rotatekIz = 0;
+        public static final double rotatekFF = 0;
+        public static final double rotateMaxOutput = 1;
+        public static final double rotateMinOutput = -1;
+        public static final double allowedErr = 0.002; // Rotations, not radians
+        // Smart motion constants
+        public static final double rotateMaxVel = 1500; // RPM
+        public static final double rotateMinVel = 0;
+        public static final double rotateMaxAcc = 1000;
+
+        public static final double gravityFF = 0.1;
 
         public static final double extensionkP = 0.5;
         public static final double extensionkI = 0;
