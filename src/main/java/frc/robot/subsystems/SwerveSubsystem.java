@@ -20,24 +20,24 @@ public class SwerveSubsystem extends SubsystemBase {
         FrontLeftModule.driveMotorId, FrontLeftModule.turnMotorId,
         FrontLeftModule.driveMotorReversed, FrontLeftModule.turnMotorReversed,
         FrontLeftModule.turnCanCoderId, FrontLeftModule.absoluteEncoderOffsetRad,
-        FrontLeftModule.name);
+        FrontLeftModule.absoluteEncoderReversed, FrontLeftModule.name);
     private final SwerveModule frontRight = new SwerveModule(
         FrontRightModule.driveMotorId, FrontRightModule.turnMotorId,
         FrontRightModule.driveMotorReversed, FrontRightModule.turnMotorReversed,
         FrontRightModule.turnCanCoderId, FrontRightModule.absoluteEncoderOffsetRad,
-        FrontRightModule.name);
+        FrontRightModule.absoluteEncoderReversed, FrontRightModule.name);
     private final SwerveModule backLeft = new SwerveModule(
         BackLeftModule.driveMotorId, BackLeftModule.turnMotorId,
         BackLeftModule.driveMotorReversed, BackLeftModule.turnMotorReversed,
         BackLeftModule.turnCanCoderId, BackLeftModule.absoluteEncoderOffsetRad,
-        BackLeftModule.name);
+        BackLeftModule.absoluteEncoderReversed, BackLeftModule.name);
     private final SwerveModule backRight = new SwerveModule(
         BackRightModule.driveMotorId, BackRightModule.turnMotorId,
         BackRightModule.driveMotorReversed, BackRightModule.turnMotorReversed,
         BackRightModule.turnCanCoderId, BackRightModule.absoluteEncoderOffsetRad,
-        BackRightModule.name);
+        BackRightModule.absoluteEncoderReversed, BackRightModule.name);
 
-    private Pigeon2 gyro = new Pigeon2(0, "CANivore");
+    private Pigeon2 gyro = new Pigeon2(50, "Canivore");
 
     public SwerveDriveOdometry swerveDriveOdometry;
     

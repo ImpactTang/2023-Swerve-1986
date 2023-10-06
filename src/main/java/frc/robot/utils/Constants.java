@@ -2,6 +2,7 @@ package frc.robot.utils;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
@@ -69,51 +70,60 @@ public final class Constants {
 
     public static final class ModuleConstants{
 
-        public static final double kModuleP = 0.1;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
+        public static final double kDriveMotorGearRatio = 1 / 8.16;
+        public static final double kTurningMotorGearRatio = 1 / 12.8;
+        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+        public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+        public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+        public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+        public static final double kPTurning = 0.5;
+
+        public static final double kModuleP = 0.5;
         public static final double kModuleI = 0;
         public static final double kModuleD = 0;
 
-        public static final double kAllowableError = 0;
-        public static final double kDriveCurrentLimit = 0;
-        public static final double kTurnCurrentLimit = 0;
-
         public static final class FrontLeftModule{
-            public static final int driveMotorId = 1;
-            public static final int turnMotorId = 2;
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turnMotorReversed = false;
-            public static final int turnCanCoderId = 3;
-            public static final double absoluteEncoderOffsetRad = 0;
-            public static final String name = "Front Left";
-        }
-
-        public static final class FrontRightModule{
-            public static final int driveMotorId = 4;
-            public static final int turnMotorId = 5;
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turnMotorReversed = false;
-            public static final int turnCanCoderId = 6;
-            public static final double absoluteEncoderOffsetRad = 0;
-            public static final String name = "Front Right";
-        }
-
-        public static final class BackLeftModule{
-            public static final int driveMotorId = 7;
-            public static final int turnMotorId = 8;
-            public static final boolean driveMotorReversed = false;
-            public static final boolean turnMotorReversed = false;
-            public static final int turnCanCoderId = 9;
-            public static final double absoluteEncoderOffsetRad = 0;
-            public static final String name = "Back Left";
-        }
-
-        public static final class BackRightModule{
-            public static final int driveMotorId = 10;
-            public static final int turnMotorId = 11;
+            public static final int driveMotorId = 04;
+            public static final int turnMotorId = 05;
             public static final boolean driveMotorReversed = false;
             public static final boolean turnMotorReversed = false;
             public static final int turnCanCoderId = 12;
             public static final double absoluteEncoderOffsetRad = 0;
+            public static final boolean absoluteEncoderReversed = false;
+            public static final String name = "Front Left";
+        }
+
+        public static final class FrontRightModule{
+            public static final int driveMotorId = 00;
+            public static final int turnMotorId = 01;
+            public static final boolean driveMotorReversed = false;
+            public static final boolean turnMotorReversed = false;
+            public static final int turnCanCoderId = 10;
+            public static final double absoluteEncoderOffsetRad = 0;
+            public static final boolean absoluteEncoderReversed = false;
+            public static final String name = "Front Right";
+        }
+
+        public static final class BackLeftModule{
+            public static final int driveMotorId = 06;
+            public static final int turnMotorId = 07;
+            public static final boolean driveMotorReversed = false;
+            public static final boolean turnMotorReversed = false;
+            public static final int turnCanCoderId = 13;
+            public static final double absoluteEncoderOffsetRad = 0;
+            public static final boolean absoluteEncoderReversed = false;
+            public static final String name = "Back Left";
+        }
+
+        public static final class BackRightModule{
+            public static final int driveMotorId = 02;
+            public static final int turnMotorId = 03;
+            public static final boolean driveMotorReversed = false;
+            public static final boolean turnMotorReversed = false;
+            public static final int turnCanCoderId = 11;
+            public static final double absoluteEncoderOffsetRad = 0;
+            public static final boolean absoluteEncoderReversed = false;
             public static final String name = "Back Right";
         }
 

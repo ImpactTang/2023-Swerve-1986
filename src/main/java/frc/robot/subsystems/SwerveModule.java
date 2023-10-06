@@ -15,7 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.utils.Constants.DriveConstants;
-import frc.robot.utils.Conversions;
+import frc.robot.utils.Constants.ModuleConstants;
 
 public class SwerveModule{
 
@@ -29,45 +29,39 @@ public class SwerveModule{
     private final CANCoder turnCanCoder;
 
     private final double absoluteEncoderOffsetRad;
+    private final boolean absoluteEncoderReversed;
 
-    public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turnMotorReversed, int turnCanCoderId, double absoluteEncoderOffsetRad, String name){
+    public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turnMotorReversed, int turnCanCoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed, String name){
         
         this.moduleName = name;
 
         this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
+        this.absoluteEncoderReversed = absoluteEncoderReversed;
 
         /* Drive Motor Config */
-        driveMotor = new TalonFX(driveMotorId, "CANivore");
+        driveMotor = new TalonFX(driveMotorId, "Canivore");
         driveMotor.configFactoryDefault();
         SupplyCurrentLimitConfiguration driveSupplyLimit = new SupplyCurrentLimitConfiguration(
             true, 35, 60, 0.1);
         
-        driveMotor.config_kP(0, 0.5);
-        driveMotor.config_kI(0, 0.0);
-        driveMotor.config_kD(0, 0.0);
-        driveMotor.config_kF(0, 0.0);
         driveMotor.configSupplyCurrentLimit(driveSupplyLimit);
         driveMotor.configOpenloopRamp(0.25);
         driveMotor.setInverted(driveMotorReversed);
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
         /* Turn Motor Config */
-        turnMotor = new TalonFX(turnMotorId, "CANivore");
+        turnMotor = new TalonFX(turnMotorId, "Canivore");
         turnMotor.configFactoryDefault();
         SupplyCurrentLimitConfiguration turnSupplyLimit = new SupplyCurrentLimitConfiguration(
             true, 35, 60, 0.1);
-        
-        turnMotor.config_kP(0, 0.5);
-        turnMotor.config_kI(0, 0.0);
-        turnMotor.config_kD(0, 0.0);
-        turnMotor.config_kF(0, 0.0);
+
         turnMotor.configSupplyCurrentLimit(turnSupplyLimit);
         turnMotor.configOpenloopRamp(0.25);
         turnMotor.setInverted(turnMotorReversed);
         turnMotor.setNeutralMode(NeutralMode.Brake);
 
         /* Turn CANCoder Config */
-        turnCanCoder = new CANCoder(turnCanCoderId, "CANivore");
+        turnCanCoder = new CANCoder(turnCanCoderId, "Canivore");
         turnCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         turnCanCoder.configSensorDirection(false);
         turnCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
@@ -84,19 +78,19 @@ public class SwerveModule{
     }
 
     public double getDrivePosition(){
-        return driveMotor.getSelectedSensorPosition();
+        return driveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter;
     }
 
     public double getTurningPosition(){
-        return turnCanCoder.getPosition();
+        return turnCanCoder.getPosition() * ModuleConstants.kTurningEncoderRot2Rad;
     }
 
     public double getDriveVelocity(){
-        return driveMotor.getSelectedSensorVelocity();
+        return driveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPM2MeterPerSec;
     }
 
     public double getTurnVelocity(){
-        return turnCanCoder.getVelocity();
+        return turnCanCoder.getVelocity() * ModuleConstants.kTurningEncoderRPM2RadPerSec;
     }
 
     public SwerveModuleState getState(){
@@ -124,17 +118,19 @@ public class SwerveModule{
     public Rotation2d getCanCoder(){
         return Rotation2d.fromDegrees(turnCanCoder.getAbsolutePosition());
     }
-  
+
     public void update(){
         SmartDashboard.putNumber(moduleName + "Absolute-Position", turnCanCoder.getAbsolutePosition());
     }
 
+    public double getAbsoluteEncoderRad(){
+        double angle = turnCanCoder.getAbsolutePosition() * Math.PI / 180.0;
+        return angle * (absoluteEncoderReversed ? -1 : 1);
+    }
+
     public void resetEncoders(){
         driveMotor.setSelectedSensorPosition(0);
-
-        // Reseting turn motor sensor to CanCoder Sensor
-        double absolutePosition = Conversions.degreesToFalcon(getCanCoder().getDegrees() - (absoluteEncoderOffsetRad * (180.0 / Math.PI)), 12.8);
-        turnMotor.setSelectedSensorPosition(absolutePosition);
+        turnMotor.setSelectedSensorPosition((turnCanCoder.getAbsolutePosition() * Math.PI / 180.0) - absoluteEncoderOffsetRad);
     }
     
     public void stop(){
