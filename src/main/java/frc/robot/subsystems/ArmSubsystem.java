@@ -43,15 +43,18 @@ public class ArmSubsystem extends SubsystemBase {
     // private SlewRateLimiter rotateSlewRateLimiter;
     // private SlewRateLimiter extensionSlewRateLimiter;
 
-    private Double rotateSetpoint = null;
-
     public ArmSubsystem() {
 
         rotateMotor = new CANSparkMax(ArmConstants.rotateMotorId, MotorType.kBrushless);
-        rotateCanCoder = new CANCoder(ArmConstants.rotateCanCoderId);
+        rotateCanCoder = new CANCoder(ArmConstants.rotateCanCoderId, "rio");
 
         rotateMotor.restoreFactoryDefaults();
         rotateCanCoder.configFactoryDefault();
+
+        rotateCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        rotateCanCoder.configSensorDirection(false);
+        rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+        rotateCanCoder.configGetFeedbackTimeBase();
 
         rotateMotorEncoder = rotateMotor.getAbsoluteEncoder(Type.kDutyCycle);
         rotatePidController = rotateMotor.getPIDController();
@@ -77,39 +80,35 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-
-        if (rotateSetpoint != null) {
-            // Calculate feed forward based on angle to compensate for gravity
-            double cosineScalar = Math.cos(getArmRotation());
-            double feedForward = ArmConstants.gravityFF * cosineScalar;
-            rotatePidController.setReference(armRadiansToEncoderRotations(rotateSetpoint),
-                ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
-
-        }
-
         SmartDashboard.putNumber("Arm Extension Motor Speed", extensionMotor.get());
         SmartDashboard.putNumber("Arm Rotation Motor Speed", rotateMotor.get());
+        SmartDashboard.putNumber("Arm Rotation Raw", rotateCanCoder.getPosition());
+        SmartDashboard.putNumber("Arm Rotation Radians", getArmRotationRadians());
     }
 
     public void rotateArm(double speed) {
-        rotateSetpoint = null;
         rotateMotor.set(speed);
     }
 
-    public void setRotateSetpoint(double setpoint) {
-        rotateSetpoint = setpoint; // SETPOINT IN RADIANS
+    public void setArmPosition(double setpoint) {
+        // Put setpoint in radians, 
+        // Calculate feed forward based on angle to compensate for gravity
+        double cosineScalar = Math.cos(getArmRotationRadians());
+        double feedForward = ArmConstants.gravityFF * cosineScalar;
+        rotatePidController.setReference(rotateRadiansToRotations(setpoint),
+        ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
     }
 
-    public double getArmRotation(){
-        return Units.rotationsToRadians(rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
+    public double getArmRotationRadians(){
+        return Units.degreesToRadians(rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
     }
 
-    static double armRadiansToEncoderRotations(double rotateRadians) {
-        return radiansToRotations(rotateRadians) - ArmConstants.rotateCanCoderOffset;
+    private double rotateRadiansToRotations(double rotateRadians) {
+        // Convert input radians to rotations, [0, 1]
+        return radiansToRotations(rotateRadians) + ArmConstants.rotateCanCoderOffset;
     }
 
-    public void stop(){
-        rotateSetpoint = null;
+    public void stopArm(){
         rotateMotor.set(0);
     }
 }

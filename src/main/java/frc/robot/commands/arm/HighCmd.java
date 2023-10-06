@@ -18,11 +18,7 @@ public class HighCmd extends CommandBase {
 
     @Override
     public void execute() {
-      armSubsystem.setArmExtensionSetpoint(1.5);
-      armSubsystem.setArmRotationRadians(0.5);
-      if (armSubsystem.getArmExtensionMeters() > 3) {
-        armSubsystem.setArmExtensionMeters(0);
-      }
+      armSubsystem.setArmPosition(Math.PI);
     }
 
     @Override

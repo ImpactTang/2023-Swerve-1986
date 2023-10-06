@@ -2,9 +2,6 @@ package frc.robot.commands.arm;
 
 import frc.robot.subsystems.ArmSubsystem;
 
-import java.util.function.Supplier;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class StowCmd extends CommandBase {
@@ -22,8 +19,7 @@ public class StowCmd extends CommandBase {
 
     @Override
     public void execute() {
-      armSubsystem.setArmExtensionSetpoint(0);
-      armSubsystem.setArmRotationRadians(0);
+      armSubsystem.setArmPosition(0);
     }
 
     @Override

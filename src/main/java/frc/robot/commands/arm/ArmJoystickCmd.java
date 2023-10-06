@@ -8,12 +8,11 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmJoystickCmd extends CommandBase {
 
   private final ArmSubsystem armSubsystem;
-  Supplier<Double> rotationSetpoint, extensionSetpoint;
+  Supplier<Double> rotationSpeed, extensionSetpoint;
 
-  public ArmJoystickCmd(ArmSubsystem armSubsystem, Supplier<Double> rotationSetpoint, Supplier<Double> extensionSetpoint) {
+  public ArmJoystickCmd(ArmSubsystem armSubsystem, Supplier<Double> rotationSpeed, Supplier<Double> extensionSetpoint) {
     this.armSubsystem = armSubsystem;
-    this.rotationSetpoint = rotationSetpoint;
-    this.extensionSetpoint = extensionSetpoint;
+    this.rotationSpeed = rotationSpeed;
     
     addRequirements(armSubsystem);
   }
@@ -23,8 +22,7 @@ public class ArmJoystickCmd extends CommandBase {
 
   @Override
   public void execute() {
-    armSubsystem.setArmExtensionMeters(extensionSetpoint.get());
-    armSubsystem.setArmRotationRadians(rotationSetpoint.get());
+    armSubsystem.rotateArm(rotationSpeed.get());
   }
 
   @Override
