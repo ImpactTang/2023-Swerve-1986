@@ -1,9 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,16 +39,6 @@ public class RobotContainer {
     () -> driveController.getRawAxis(4), // Axis 2 = Right X Stick
     () -> robotCentric.getAsBoolean()));
 
-
-    /*
-    armSubsystem.setDefaultCommand(new StowCmd(armSubsystem, 
-    () -> buttonBox.button(1).getAsBoolean(),
-    () -> buttonBox.button(2).getAsBoolean(),
-    () -> buttonBox.button(3).getAsBoolean(),
-    () -> buttonBox.button(4).getAsBoolean(),
-    () -> buttonBox.button(5).getAsBoolean()));
-    */
-
     configureButtonBindings();
   }
 
@@ -60,7 +48,7 @@ public class RobotContainer {
     cmdDriveController.x().onTrue(new IntakeForwardCmd(intakeSubsystem));
     cmdDriveController.x().onFalse(new IntakeHoldCmd(intakeSubsystem));
 
-    // cmdDriveController.b().onTrue(new StowCmd(armSubsystem));
+    cmdDriveController.b().onTrue(new StowCmd(armSubsystem));
     cmdDriveController.y().onTrue(new HighCmd(armSubsystem));
     buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armSubsystem));
   }

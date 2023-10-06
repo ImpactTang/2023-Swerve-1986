@@ -30,24 +30,20 @@ public class ArmSubsystem extends SubsystemBase {
     private CANSparkMax rotateMotor;
     private CANSparkMax extensionMotor;
 
-    // private RelativeEncoder extensionMotorEncoder;
+    private SparkMaxAbsoluteEncoder extensionMotorEncoder;
     private SparkMaxAbsoluteEncoder rotateMotorEncoder;
     private CANCoder rotateCanCoder;
 
     private SparkMaxPIDController rotatePidController;
-    // private PIDController extensionPidController;
-
-    // private double rotationSetpointRadians;
-    // private double extensionSetpointMeters;
-
-    // private SlewRateLimiter rotateSlewRateLimiter;
-    // private SlewRateLimiter extensionSlewRateLimiter;
+    private SparkMaxPIDController extensionPidController;
 
     public ArmSubsystem() {
 
+        extensionMotor = new CANSparkMax(ArmConstants.extensionMotorId, MotorType.kBrushless);
         rotateMotor = new CANSparkMax(ArmConstants.rotateMotorId, MotorType.kBrushless);
         rotateCanCoder = new CANCoder(ArmConstants.rotateCanCoderId, "rio");
 
+        extensionMotor.restoreFactoryDefaults();
         rotateMotor.restoreFactoryDefaults();
         rotateCanCoder.configFactoryDefault();
 
@@ -56,9 +52,20 @@ public class ArmSubsystem extends SubsystemBase {
         rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         rotateCanCoder.configGetFeedbackTimeBase();
 
+        extensionMotorEncoder = extensionMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        extensionPidController = extensionMotor.getPIDController();
+        extensionPidController.setFeedbackDevice(extensionMotorEncoder);
+
         rotateMotorEncoder = rotateMotor.getAbsoluteEncoder(Type.kDutyCycle);
         rotatePidController = rotateMotor.getPIDController();
         rotatePidController.setFeedbackDevice(rotateMotorEncoder);
+
+        extensionPidController.setP(ArmConstants.extensionkP);
+        extensionPidController.setI(ArmConstants.extensionkI);
+        extensionPidController.setD(ArmConstants.extensionkD);
+        extensionPidController.setIZone(ArmConstants.extensionkIz);
+        extensionPidController.setFF(ArmConstants.extensionkFF);
+        extensionPidController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
 
         rotatePidController.setP(ArmConstants.rotatekP);
         rotatePidController.setI(ArmConstants.rotatekI);
