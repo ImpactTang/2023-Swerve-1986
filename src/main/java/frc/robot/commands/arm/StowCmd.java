@@ -19,12 +19,13 @@ public class StowCmd extends CommandBase {
 
     @Override
     public void execute() {
-      armSubsystem.setArmPosition(0);
+      armSubsystem.setArmRotation(Math.PI * 0.5);
+      armSubsystem.setArmExtension(0);
     }
 
     @Override
     public void end(boolean interrupted) {
-      
+      armSubsystem.stopArm();
     }
 
     @Override

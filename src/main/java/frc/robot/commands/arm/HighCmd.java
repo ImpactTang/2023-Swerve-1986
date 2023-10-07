@@ -18,12 +18,13 @@ public class HighCmd extends CommandBase {
 
     @Override
     public void execute() {
-      armSubsystem.setArmPosition(Math.PI);
+      armSubsystem.setArmRotation(55 * (Math.PI / 180));
+      armSubsystem.setArmExtension(20.0);
     }
 
     @Override
     public void end(boolean interrupted) {
-      
+      armSubsystem.stopArm();
     }
 
     @Override

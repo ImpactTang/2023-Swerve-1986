@@ -6,7 +6,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -15,10 +14,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController.ArbFFUnits;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static edu.wpi.first.math.util.Units.radiansToRotations;
@@ -37,13 +33,110 @@ public class ArmSubsystem extends SubsystemBase {
     private SparkMaxPIDController rotatePidController;
     private SparkMaxPIDController extensionPidController;
 
+    private double armRotationSetpoint;
+    private final double armMaxExtension = 35; // inches
+    private final double armMinExtension = 0.0;
+    private double armExtensionSetpoint = armMinExtension;
+
     public ArmSubsystem() {
 
+        extensionMotorConfig();
+        rotateMotorConfig();
+
+        armExtensionSetpoint = 0.0;
+
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Arm Extension Motor Speed", extensionMotor.get());
+        SmartDashboard.putNumber("Arm Rotation Motor Speed", rotateMotor.get());
+        SmartDashboard.putNumber("Arm Rotation Raw", rotateCanCoder.getPosition());
+        SmartDashboard.putNumber("Arm Rotation Radians", getArmRotationRadians());
+        SmartDashboard.putNumber("Arm setpoint", armRotationSetpoint);
+        SmartDashboard.putNumber("Arm Extension setpoint", armExtensionSetpoint);
+    }
+
+    public void rotateArm(double speed) {
+        rotateMotor.set(speed);
+    }
+
+    public void extendArm(double speed) {
+        extensionMotor.set(speed);
+    }
+
+    public void setArmRotation(double setpoint) {
+        this.armRotationSetpoint = setpoint;
+        // Put setpoint in radians, 
+        // Calculate feed forward based on angle to compensate for gravity
+        double cosineScalar = Math.cos(getArmRotationRadians());
+        double feedForward = ArmConstants.gravityFF * cosineScalar;
+        rotatePidController.setReference(rotateRadiansToRotations(setpoint),
+        ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
+    }
+
+    public void setArmExtension(double setpoint) {
+        // Put setpoint in inches
+        extensionPidController.setReference(setExtensionSetpoint(setpoint), ControlType.kSmartMotion, 0);
+    }
+
+    public double setExtensionSetpoint(double newSetpoint){
+        if (newSetpoint > armMaxExtension){
+            return armExtensionSetpoint = armMaxExtension;
+        } else if (newSetpoint < armMinExtension){
+            return armExtensionSetpoint = armMinExtension;
+        } else {
+            return armExtensionSetpoint = newSetpoint;
+        }
+    }
+
+    public double getArmRotationRadians(){
+        return Units.degreesToRadians(rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
+    }
+
+    private double rotateRadiansToRotations(double rotateRadians) {
+        // Convert input radians to rotations, [0, 1]
+        return radiansToRotations(rotateRadians + Units.degreesToRadians(ArmConstants.rotateCanCoderOffset));
+    }
+
+    public double getArmExtension(){
+        return extensionMotorEncoder.getPosition();
+    }
+
+    public void extensionMotorConfig(){
+
         extensionMotor = new CANSparkMax(ArmConstants.extensionMotorId, MotorType.kBrushless);
+        extensionMotor.restoreFactoryDefaults();
+
+        extensionMotorEncoder = extensionMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        extensionMotor.setInverted(ArmConstants.extensionMotorInverted);
+        extensionMotorEncoder.setPositionConversionFactor(ArmConstants.extensionEncoderConversionFactor);
+        extensionPidController = extensionMotor.getPIDController();
+        extensionPidController.setFeedbackDevice(extensionMotorEncoder);
+
+        extensionPidController.setP(ArmConstants.extensionkP);
+        extensionPidController.setI(ArmConstants.extensionkI);
+        extensionPidController.setD(ArmConstants.extensionkD);
+        extensionPidController.setIZone(ArmConstants.extensionkIz);
+        extensionPidController.setFF(ArmConstants.extensionkFF);
+        extensionPidController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
+
+        extensionPidController.setSmartMotionMaxVelocity(ArmConstants.extensionMaxVel, 0);
+        extensionPidController.setSmartMotionMinOutputVelocity(ArmConstants.extensionMinVel, 0);
+        extensionPidController.setSmartMotionMaxAccel(ArmConstants.extensionMaxAcc, 0);
+        extensionPidController.setSmartMotionAllowedClosedLoopError(ArmConstants.allowedErr, 0);
+
+        extensionMotor.setSmartCurrentLimit(50);
+        extensionMotor.setIdleMode(IdleMode.kBrake);
+        extensionMotor.burnFlash();
+
+    }
+
+    public void rotateMotorConfig(){
+        
         rotateMotor = new CANSparkMax(ArmConstants.rotateMotorId, MotorType.kBrushless);
         rotateCanCoder = new CANCoder(ArmConstants.rotateCanCoderId, "rio");
 
-        extensionMotor.restoreFactoryDefaults();
         rotateMotor.restoreFactoryDefaults();
         rotateCanCoder.configFactoryDefault();
 
@@ -52,20 +145,12 @@ public class ArmSubsystem extends SubsystemBase {
         rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         rotateCanCoder.configGetFeedbackTimeBase();
 
-        extensionMotorEncoder = extensionMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        extensionPidController = extensionMotor.getPIDController();
-        extensionPidController.setFeedbackDevice(extensionMotorEncoder);
+        rotateMotor.setInverted(ArmConstants.rotateMotorInverted);
+        rotateCanCoder.configSensorDirection(ArmConstants.rotateCanCoderReversed);
 
         rotateMotorEncoder = rotateMotor.getAbsoluteEncoder(Type.kDutyCycle);
         rotatePidController = rotateMotor.getPIDController();
         rotatePidController.setFeedbackDevice(rotateMotorEncoder);
-
-        extensionPidController.setP(ArmConstants.extensionkP);
-        extensionPidController.setI(ArmConstants.extensionkI);
-        extensionPidController.setD(ArmConstants.extensionkD);
-        extensionPidController.setIZone(ArmConstants.extensionkIz);
-        extensionPidController.setFF(ArmConstants.extensionkFF);
-        extensionPidController.setOutputRange(ArmConstants.extensionMinOutput, ArmConstants.extensionMaxOutput);
 
         rotatePidController.setP(ArmConstants.rotatekP);
         rotatePidController.setI(ArmConstants.rotatekI);
@@ -82,40 +167,11 @@ public class ArmSubsystem extends SubsystemBase {
         rotateMotor.setSmartCurrentLimit(50);
         rotateMotor.setIdleMode(IdleMode.kBrake);
         rotateMotor.burnFlash();
-        
-    }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Arm Extension Motor Speed", extensionMotor.get());
-        SmartDashboard.putNumber("Arm Rotation Motor Speed", rotateMotor.get());
-        SmartDashboard.putNumber("Arm Rotation Raw", rotateCanCoder.getPosition());
-        SmartDashboard.putNumber("Arm Rotation Radians", getArmRotationRadians());
-    }
-
-    public void rotateArm(double speed) {
-        rotateMotor.set(speed);
-    }
-
-    public void setArmPosition(double setpoint) {
-        // Put setpoint in radians, 
-        // Calculate feed forward based on angle to compensate for gravity
-        double cosineScalar = Math.cos(getArmRotationRadians());
-        double feedForward = ArmConstants.gravityFF * cosineScalar;
-        rotatePidController.setReference(rotateRadiansToRotations(setpoint),
-        ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
-    }
-
-    public double getArmRotationRadians(){
-        return Units.degreesToRadians(rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
-    }
-
-    private double rotateRadiansToRotations(double rotateRadians) {
-        // Convert input radians to rotations, [0, 1]
-        return radiansToRotations(rotateRadians) + ArmConstants.rotateCanCoderOffset;
     }
 
     public void stopArm(){
         rotateMotor.set(0);
+        extensionMotor.set(0);
     }
 }

@@ -6,6 +6,15 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
+    public static final class WristConstants{
+
+        // TODO: ADJUST CONSTANTS
+        public static final int wristMotorId = 25;
+        public static final int wristEncoderId = 24;
+        public static final int wristEncoderOffset = 0;
+
+    }
+
     public static final class IntakeConstants{
 
         // TODO: ADJUST CONSTANTS
@@ -14,10 +23,6 @@ public final class Constants {
         public static final int intakeMotorFreeSpinCurrentLimit = 40;
         public static final boolean intakeMotorInverted = false;
         public static final double openLoopRampRate = 1.0;
-
-        public static final double kP = 0.5;
-        public static final double kI = 0.0;
-        public static final double kD = 0.0;
     }
 
     public static final class ArmConstants{
@@ -57,6 +62,16 @@ public final class Constants {
         public static final double extensionkP = 0.5;
         public static final double extensionkI = 0;
         public static final double extensionkD = 0;
+        public static final double extensionkIz = 0;
+        public static final double extensionkFF = 0;
+        public static final double extensionMaxOutput = 1;
+        public static final double extensionMinOutput = -1;
+        public static final double extensionAllowedErr = 0.002;
+        public static final double extensionEncoderConversionFactor = 0.65625; // 0.65625 rotations per inch
+
+        public static final double extensionMaxVel = 1500;
+        public static final double extensionMinVel = 0;
+        public static final double extensionMaxAcc = 1000;
     }
 
     public static final class DriveConstants{

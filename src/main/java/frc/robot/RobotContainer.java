@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.arm.ArmJoystickCmd;
 import frc.robot.commands.arm.HighCmd;
 import frc.robot.commands.arm.StowCmd;
 import frc.robot.commands.intake.IntakeForwardCmd;
@@ -50,7 +51,7 @@ public class RobotContainer {
 
     cmdDriveController.b().onTrue(new StowCmd(armSubsystem));
     cmdDriveController.y().onTrue(new HighCmd(armSubsystem));
-    buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armSubsystem));
+    // buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armSubsystem));
   }
   
 }
