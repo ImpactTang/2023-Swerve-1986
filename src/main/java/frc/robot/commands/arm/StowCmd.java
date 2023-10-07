@@ -19,7 +19,7 @@ public class StowCmd extends CommandBase {
 
     @Override
     public void execute() {
-      armSubsystem.setArmRotation(Math.PI * 0.5);
+      armSubsystem.setArmRotation(Math.PI / 2.0);
       armSubsystem.setArmExtension(0);
     }
 
@@ -30,6 +30,6 @@ public class StowCmd extends CommandBase {
 
     @Override
     public boolean isFinished() {
-      return false;
+      return true;
     }
 }   

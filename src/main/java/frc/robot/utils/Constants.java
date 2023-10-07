@@ -10,8 +10,28 @@ public final class Constants {
 
         // TODO: ADJUST CONSTANTS
         public static final int wristMotorId = 25;
-        public static final int wristEncoderId = 24;
-        public static final int wristEncoderOffset = 0;
+        public static final int wristCanCoderId = 24;
+        public static final int wristCanCoderOffset = 0; // SET IN DEGREES
+        public static final boolean wristMotorReversed = false;
+        public static final boolean wristCanCoderReversed = false;
+
+        public static final double gravityFF = 0.01;
+
+        public static final double kP = 0.0025;
+        public static final double kI = 0;
+        public static final double kD = 0;
+        public static final double kIz = 0;
+        public static final double kFF = 0;
+        public static final double wristMaxOutput = 1;
+        public static final double wristMinOutput = -1;
+        public static final double allowedError = 0.002; // Rotations, not radians
+
+        // Smart motion constants
+        public static final double wristMaxVel = 1500; // RPM
+        public static final double wristMinVel = 0;
+        public static final double wristMaxAccel = 1000;
+
+        public static final int wristMotorCurrentLimit = 20;
 
     }
 
@@ -21,7 +41,7 @@ public final class Constants {
         public static final int intakeMotorId = 30;
         public static final int intakeMotorStallCurrentLimit = 40;
         public static final int intakeMotorFreeSpinCurrentLimit = 40;
-        public static final boolean intakeMotorInverted = false;
+        public static final boolean intakeMotorReversed = false;
         public static final double openLoopRampRate = 1.0;
     }
 
@@ -32,8 +52,8 @@ public final class Constants {
         public static final int extensionMotorId = 22;
         public static final int rotateCanCoderId = 21;
 
-        public static final boolean rotateMotorInverted = false;
-        public static final boolean extensionMotorInverted = false;
+        public static final boolean rotateMotorReversed = false;
+        public static final boolean extensionMotorReversed = false;
         public static final boolean rotateCanCoderReversed = false;
 
         public static final int rotateCanCoderOffset = 0;

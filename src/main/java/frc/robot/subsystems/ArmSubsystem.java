@@ -34,7 +34,7 @@ public class ArmSubsystem extends SubsystemBase {
     private SparkMaxPIDController extensionPidController;
 
     private double armRotationSetpoint;
-    private final double armMaxExtension = 35; // inches
+    private final double armMaxExtension = Units.inchesToMeters(35.0);
     private final double armMinExtension = 0.0;
     private double armExtensionSetpoint = armMinExtension;
 
@@ -75,18 +75,18 @@ public class ArmSubsystem extends SubsystemBase {
         ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
     }
 
-    public void setArmExtension(double setpoint) {
-        // Put setpoint in inches
-        extensionPidController.setReference(setExtensionSetpoint(setpoint), ControlType.kSmartMotion, 0);
+    public void setArmExtension(double armExtensionSetpoint) {
+        // Put setpoint in meters
+        extensionPidController.setReference(setExtensionSetpoint(armExtensionSetpoint), ControlType.kSmartMotion);
     }
 
-    public double setExtensionSetpoint(double newSetpoint){
-        if (newSetpoint > armMaxExtension){
+    public double setExtensionSetpoint(double armExtensionSetpoint){
+        if (armExtensionSetpoint > armMaxExtension){
             return armExtensionSetpoint = armMaxExtension;
-        } else if (newSetpoint < armMinExtension){
+        } else if (armExtensionSetpoint < armMinExtension){
             return armExtensionSetpoint = armMinExtension;
         } else {
-            return armExtensionSetpoint = newSetpoint;
+            return armExtensionSetpoint;
         }
     }
 
@@ -109,7 +109,7 @@ public class ArmSubsystem extends SubsystemBase {
         extensionMotor.restoreFactoryDefaults();
 
         extensionMotorEncoder = extensionMotor.getAbsoluteEncoder(Type.kDutyCycle);
-        extensionMotor.setInverted(ArmConstants.extensionMotorInverted);
+        extensionMotor.setInverted(ArmConstants.extensionMotorReversed);
         extensionMotorEncoder.setPositionConversionFactor(ArmConstants.extensionEncoderConversionFactor);
         extensionPidController = extensionMotor.getPIDController();
         extensionPidController.setFeedbackDevice(extensionMotorEncoder);
@@ -141,12 +141,11 @@ public class ArmSubsystem extends SubsystemBase {
         rotateCanCoder.configFactoryDefault();
 
         rotateCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
-        rotateCanCoder.configSensorDirection(false);
+        rotateCanCoder.configSensorDirection(ArmConstants.rotateCanCoderReversed);
         rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         rotateCanCoder.configGetFeedbackTimeBase();
 
-        rotateMotor.setInverted(ArmConstants.rotateMotorInverted);
-        rotateCanCoder.configSensorDirection(ArmConstants.rotateCanCoderReversed);
+        rotateMotor.setInverted(ArmConstants.rotateMotorReversed);
 
         rotateMotorEncoder = rotateMotor.getAbsoluteEncoder(Type.kDutyCycle);
         rotatePidController = rotateMotor.getPIDController();

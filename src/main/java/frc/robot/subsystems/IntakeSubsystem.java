@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorId, MotorType.kBrushless);
     intakeMotor.setIdleMode(IdleMode.kCoast);
-    intakeMotor.setInverted(IntakeConstants.intakeMotorInverted);
+    intakeMotor.setInverted(IntakeConstants.intakeMotorReversed);
     intakeMotor.setSmartCurrentLimit(IntakeConstants.intakeMotorStallCurrentLimit, IntakeConstants.intakeMotorFreeSpinCurrentLimit);
     intakeMotor.setOpenLoopRampRate(IntakeConstants.openLoopRampRate);
     intakeMotor.burnFlash();
