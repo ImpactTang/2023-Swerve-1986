@@ -30,6 +30,8 @@ public class WristSubsystem extends SubsystemBase {
 
   public WristSubsystem() {
 
+    wristSetpoint = 0.0;
+
     wristMotor = new CANSparkMax(WristConstants.wristMotorId, MotorType.kBrushless);
     wristMotor.restoreFactoryDefaults();
 
@@ -79,6 +81,7 @@ public class WristSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Wrist Position Radians", getWristPosition());
     SmartDashboard.putNumber("Wrist Position Raw", wristCanCoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Wrist Setpoint", wristSetpoint);
   }
 
   public void rotateWrist(double speed){
@@ -86,6 +89,7 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void setWristPosition(double radians){
+    this.wristSetpoint = radians;
     wristSetpoint = radians;
   }
 

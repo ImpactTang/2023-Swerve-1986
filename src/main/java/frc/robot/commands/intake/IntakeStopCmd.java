@@ -15,11 +15,11 @@ public class IntakeStopCmd extends CommandBase{
 
     @Override
     public void initialize(){
+        intakeSubsystem.stopIntake();
     }
 
     @Override
     public void execute(){
-        intakeSubsystem.stopIntake();
     }
 
     @Override
