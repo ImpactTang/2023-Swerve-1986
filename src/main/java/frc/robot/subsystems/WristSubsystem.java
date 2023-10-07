@@ -24,13 +24,11 @@ public class WristSubsystem extends SubsystemBase {
   private SparkMaxPIDController wristPidController;
   private CANCoder wristCanCoder;
 
-  private final double wristMaxRotationRadians = 0.0;
+  private final double wristMaxRotationRadians = Math.PI;
   private final double wristMinRotationRadians = 0.0;
   private Double wristSetpoint = null;
 
   public WristSubsystem() {
-
-    wristSetpoint = 0.0;
 
     wristMotor = new CANSparkMax(WristConstants.wristMotorId, MotorType.kBrushless);
     wristMotor.restoreFactoryDefaults();
@@ -38,10 +36,12 @@ public class WristSubsystem extends SubsystemBase {
     wristCanCoder = new CANCoder(WristConstants.wristCanCoderId);
     wristCanCoder.configFactoryDefault();
 
-    wristCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+    wristCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     wristCanCoder.configSensorDirection(WristConstants.wristCanCoderReversed);
     wristCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     wristCanCoder.configGetFeedbackTimeBase();
+
+    wristSetpoint = Units.degreesToRadians(wristCanCoder.getAbsolutePosition() + WristConstants.wristCanCoderOffset);
 
     wristMotor.setInverted(WristConstants.wristMotorReversed);
     wristMotorEncoder = wristMotor.getAbsoluteEncoder(Type.kDutyCycle);

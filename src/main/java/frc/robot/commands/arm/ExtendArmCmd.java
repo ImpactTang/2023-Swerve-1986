@@ -3,12 +3,12 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 
-public class ExtendCmd extends CommandBase {
+public class ExtendArmCmd extends CommandBase {
 
   private final ArmExtensionSubsystem armExtensionSubsystem;
   private double setpoint;
 
-  public ExtendCmd(ArmExtensionSubsystem armExtensionSubsystem, double setpoint) {
+  public ExtendArmCmd(ArmExtensionSubsystem armExtensionSubsystem, double setpoint) {
     this.armExtensionSubsystem = armExtensionSubsystem;
     this.setpoint = setpoint;
     addRequirements(armExtensionSubsystem);

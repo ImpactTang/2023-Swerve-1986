@@ -68,7 +68,7 @@ public class SwerveModule{
         turnCanCoder.configGetFeedbackTimeBase();
 
         /* PID Controller for Turning */
-        turningPidController = new PIDController(0.5, 0, 0);
+        turningPidController = new PIDController(0.5, 0, 0.0);
         turningPidController.enableContinuousInput(-Math.PI, Math.PI);
 
         /* Timer so stuff can initialize before reset */
@@ -78,19 +78,19 @@ public class SwerveModule{
     }
 
     public double getDrivePosition(){
-        return driveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter;
+        return driveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveMotorRot2Meter;
     }
 
     public double getTurningPosition(){
-        return turnCanCoder.getPosition() * ModuleConstants.kTurningEncoderRot2Rad;
+        return turnMotor.getSelectedSensorPosition() * ModuleConstants.kTurningMotorRot2Rad;
     }
 
     public double getDriveVelocity(){
-        return driveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveEncoderRPM2MeterPerSec;
+        return driveMotor.getSelectedSensorVelocity() * ModuleConstants.kDriveVelocity2MeterPerSec;
     }
 
     public double getTurnVelocity(){
-        return turnCanCoder.getVelocity() * ModuleConstants.kTurningEncoderRPM2RadPerSec;
+        return turnCanCoder.getVelocity() * ModuleConstants.kTurningVelocity2RadPerSec;
     }
 
     public SwerveModuleState getState(){
@@ -130,7 +130,7 @@ public class SwerveModule{
 
     public void resetEncoders(){
         driveMotor.setSelectedSensorPosition(0);
-        turnMotor.setSelectedSensorPosition((turnCanCoder.getAbsolutePosition() * Math.PI / 180.0) - absoluteEncoderOffsetRad);
+        turnMotor.setSelectedSensorPosition(((turnCanCoder.getAbsolutePosition() * Math.PI / 180.0) - absoluteEncoderOffsetRad) / 2048.0);
     }
     
     public void stop(){

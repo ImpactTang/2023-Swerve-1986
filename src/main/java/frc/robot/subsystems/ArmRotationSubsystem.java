@@ -13,6 +13,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.ArmConstants;
@@ -25,6 +27,8 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     private SparkMaxPIDController rotatePidController;
 
+    private Solenoid armBrakeSolenoid;
+
     private final double armMaxRotation = Math.PI;
     private final double armMinRotation = 0.0;
     private double armRotationSetpoint = armMinRotation;
@@ -33,7 +37,9 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         rotateMotorConfig();
 
-        armRotationSetpoint = 0.0;
+        armBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
+
+        armRotationSetpoint = Math.PI / 2.0;
 
     }
 
@@ -75,6 +81,10 @@ public class ArmRotationSubsystem extends SubsystemBase {
         return Units.radiansToRotations(rotateRadians + Units.degreesToRadians(ArmConstants.rotateCanCoderOffset));
     }
 
+    public void toggleArmBrake(){
+        armBrakeSolenoid.toggle();
+    }
+
     public void rotateMotorConfig(){
         
         rotateMotor = new CANSparkMax(ArmConstants.rotateMotorId, MotorType.kBrushless);
@@ -83,7 +93,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         rotateMotor.restoreFactoryDefaults();
         rotateCanCoder.configFactoryDefault();
 
-        rotateCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
+        rotateCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         rotateCanCoder.configSensorDirection(ArmConstants.rotateCanCoderReversed);
         rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         rotateCanCoder.configGetFeedbackTimeBase();

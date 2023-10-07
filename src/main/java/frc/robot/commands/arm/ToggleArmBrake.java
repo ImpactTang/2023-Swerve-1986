@@ -3,20 +3,18 @@ package frc.robot.commands.arm;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmRotationSubsystem;
 
-public class RotateCmd extends CommandBase {
+public class ToggleArmBrake extends CommandBase {
 
   private final ArmRotationSubsystem armRotationSubsystem;
-  private double radians;
 
-  public RotateCmd(ArmRotationSubsystem armRotationSubsystem, double radians) {
+  public ToggleArmBrake(ArmRotationSubsystem armRotationSubsystem) {
     this.armRotationSubsystem = armRotationSubsystem;
-    this.radians = radians;
     addRequirements(armRotationSubsystem);
   }
 
   @Override
   public void initialize() {
-    armRotationSubsystem.setArmRotation(radians);
+    armRotationSubsystem.toggleArmBrake();
   }
 
   @Override
