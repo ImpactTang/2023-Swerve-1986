@@ -39,14 +39,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
         armBrakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, 1);
 
-        armRotationSetpoint = Math.PI / 2.0;
+        armRotationSetpoint = getArmRotationRadians();
 
     }
 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Arm Rotation Motor Speed", rotateMotor.get());
-        SmartDashboard.putNumber("Arm Rotation Raw", rotateCanCoder.getPosition());
+        SmartDashboard.putNumber("Arm Rotation Degrees", rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
         SmartDashboard.putNumber("Arm Rotation Radians", getArmRotationRadians());
         SmartDashboard.putNumber("Arm Rotation Setpoint", armRotationSetpoint);
     }

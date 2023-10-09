@@ -1,6 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,15 +42,15 @@ public class RobotContainer {
   public RobotContainer() {
 
     // Xbox Controller Driving
-    /*
+    
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(swerveSubsystem,
     () -> -cmdDriveController.getRawAxis(0), // Axis 0 = Left X Stick
     () -> -cmdDriveController.getRawAxis(1), // Axis 1 = Left Y Stick
     () -> cmdDriveController.getRawAxis(4), // Axis 2 = Right X Stick
     () -> cmdDriveController.start().getAsBoolean()));
-    */
+    
 
-    swerveSubsystem.setDefaultCommand(new MoveCmd(swerveSubsystem, 0.0, 1.0, 0.0));
+    // swerveSubsystem.setDefaultCommand(new MoveCmd(swerveSubsystem, 0.0, 1.0, 0.0));
 
     configureButtonBindings();
   }
@@ -63,6 +66,11 @@ public class RobotContainer {
     cmdDriveController.b().onTrue(new ScoreLowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     cmdDriveController.a().onTrue(new StowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem, false));
     // buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armSubsystem));
+  }
+
+  public Command getAutonomousCommand() {
+    
+    return null;
   }
   
 }
