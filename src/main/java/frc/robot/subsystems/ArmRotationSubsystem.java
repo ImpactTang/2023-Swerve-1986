@@ -45,6 +45,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        setArmRotation(armRotationSetpoint);
         SmartDashboard.putNumber("Arm Rotation Motor Speed", rotateMotor.get());
         SmartDashboard.putNumber("Arm Rotation Degrees", rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
         SmartDashboard.putNumber("Arm Rotation Radians", getArmRotationRadians());
@@ -83,6 +84,14 @@ public class ArmRotationSubsystem extends SubsystemBase {
 
     public void toggleArmBrake(){
         armBrakeSolenoid.toggle();
+    }
+
+    public void jogRight(){
+        armRotationSetpoint++;
+    }
+
+    public void jogLeft(){
+        armRotationSetpoint--;
     }
 
     public void rotateMotorConfig(){

@@ -36,6 +36,7 @@ public class ArmExtensionSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        setArmExtension(armExtensionSetpoint);
         SmartDashboard.putNumber("Arm Extension Motor Speed", extensionMotor.get());
         SmartDashboard.putNumber("Arm Extension setpoint", armExtensionSetpoint);
     }
@@ -47,17 +48,22 @@ public class ArmExtensionSubsystem extends SubsystemBase {
     public void setArmExtension(double armExtensionSetpoint) {
         this.armExtensionSetpoint = armExtensionSetpoint;
         // Put setpoint in meters
-        extensionPidController.setReference(setExtensionSetpoint(armExtensionSetpoint), ControlType.kSmartMotion);
+
+        if (armExtensionSetpoint > armMaxExtension){
+            armExtensionSetpoint = armMaxExtension;
+        } else if (armExtensionSetpoint < armMinExtension){
+            armExtensionSetpoint = armMinExtension;
+        }
+
+        extensionPidController.setReference(armExtensionSetpoint, ControlType.kSmartMotion);
     }
 
-    private double setExtensionSetpoint(double armExtensionSetpoint){
-        if (armExtensionSetpoint > armMaxExtension){
-            return armExtensionSetpoint = armMaxExtension;
-        } else if (armExtensionSetpoint < armMinExtension){
-            return armExtensionSetpoint = armMinExtension;
-        } else {
-            return armExtensionSetpoint;
-        }
+    public void jogUp(){
+        armExtensionSetpoint++;
+    }
+
+    public void jogDown(){
+        armExtensionSetpoint--;
     }
 
     public double getArmExtension(){
