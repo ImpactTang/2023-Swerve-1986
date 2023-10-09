@@ -1,20 +1,15 @@
 package frc.robot;
 
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.commands.intake.IntakeForwardCmd;
 import frc.robot.commands.intake.IntakeHoldCmd;
 import frc.robot.commands.routines.StowCmd;
 import frc.robot.commands.routines.scoring.ScoreHighCmd;
 import frc.robot.commands.routines.scoring.ScoreLowCmd;
 import frc.robot.commands.routines.scoring.ScoreMidCmd;
-import frc.robot.commands.swerve.MoveCmd;
 import frc.robot.commands.swerve.SwerveJoystickCmd;
 import frc.robot.subsystems.ArmExtensionSubsystem;
 import frc.robot.subsystems.ArmRotationSubsystem;
@@ -31,13 +26,10 @@ public class RobotContainer {
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final WristSubsystem wristSubsystem = new WristSubsystem();
 
-  private final XboxController driveController = new XboxController(0);
   private final CommandXboxController cmdDriveController = new CommandXboxController(0);
 
   /* NOTE: BUTTON BOX BUTTONS START AT 1!!! */
   // private final CommandJoystick buttonBox = new CommandJoystick(1);  
-
-  private final JoystickButton robotCentric = new JoystickButton(driveController, XboxController.Button.kStart.value);
 
   public RobotContainer() {
 
@@ -48,9 +40,6 @@ public class RobotContainer {
     () -> -cmdDriveController.getRawAxis(1), // Axis 1 = Left Y Stick
     () -> cmdDriveController.getRawAxis(4), // Axis 2 = Right X Stick
     () -> cmdDriveController.start().getAsBoolean()));
-    
-
-    // swerveSubsystem.setDefaultCommand(new MoveCmd(swerveSubsystem, 0.0, 1.0, 0.0));
 
     configureButtonBindings();
   }

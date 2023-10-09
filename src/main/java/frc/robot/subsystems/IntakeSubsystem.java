@@ -55,6 +55,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("Intake Motor Speed", getIntakeMotorSpeed());
+    SmartDashboard.putNumber("Intake Motor Encoder Position", intakeMotorEncoder.getPosition());
   }
 
 }
