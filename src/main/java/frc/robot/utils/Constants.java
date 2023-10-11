@@ -96,14 +96,14 @@ public final class Constants {
 
     public static final class DriveConstants{
 
-        public static final double kWheelBase = 23.5;
-        public static final double kTrackWidth = 16;
+        public static final double kTrackWidth = 16; // Distance between centers of right and left wheels on robot (Width, X)
+        public static final double kWheelBase = 23.5; // Distance between centers of front and back wheels on robot (Length, Y)
 
         public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2), 
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
+            new Translation2d(kTrackWidth / 2, kWheelBase / 2), // Front Left
+            new Translation2d(-kTrackWidth / 2, kWheelBase / 2), // Front Right
+            new Translation2d(kTrackWidth / 2, -kWheelBase / 2), // Back Left
+            new Translation2d(-kTrackWidth / 2, -kWheelBase / 2)); // Back Right
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 5.0;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
