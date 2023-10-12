@@ -88,6 +88,14 @@ public class WristSubsystem extends SubsystemBase {
     wristMotor.set(speed);
   }
 
+  public void jogRight(){
+    wristSetpoint -= Units.degreesToRadians(12);
+  }
+
+  public void jogLeft(){
+    wristSetpoint += Units.degreesToRadians(12);
+  }
+
   public void setWristPosition(double radians){
     this.wristSetpoint = radians;
     wristSetpoint = radians;

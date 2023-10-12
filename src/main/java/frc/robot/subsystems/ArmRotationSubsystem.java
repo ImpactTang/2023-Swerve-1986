@@ -69,7 +69,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         // Calculate feed forward based on angle to compensate for gravity
         double cosineScalar = Math.cos(getArmRotationRadians());
         double feedForward = ArmConstants.gravityFF * cosineScalar;
-        rotatePidController.setReference(armRotationRadiansToRotations(setpoint),
+        rotatePidController.setReference(armRadiansToRotations(setpoint),
         ControlType.kSmartMotion, 0, feedForward, ArbFFUnits.kPercentOut);
     }
 
@@ -77,7 +77,7 @@ public class ArmRotationSubsystem extends SubsystemBase {
         return Units.degreesToRadians(rotateCanCoder.getPosition() + ArmConstants.rotateCanCoderOffset);
     }
 
-    private double armRotationRadiansToRotations(double rotateRadians) {
+    private double armRadiansToRotations(double rotateRadians) {
         // Convert input radians to rotations, [0, 1]
         return Units.radiansToRotations(rotateRadians + Units.degreesToRadians(ArmConstants.rotateCanCoderOffset));
     }
@@ -87,11 +87,11 @@ public class ArmRotationSubsystem extends SubsystemBase {
     }
 
     public void jogRight(){
-        armRotationSetpoint++;
+        armRotationSetpoint -= Units.degreesToRadians(12);
     }
 
     public void jogLeft(){
-        armRotationSetpoint--;
+        armRotationSetpoint += Units.degreesToRadians(12);
     }
 
     public void rotateMotorConfig(){

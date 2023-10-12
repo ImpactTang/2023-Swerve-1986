@@ -23,7 +23,6 @@ public class DoubleSubstationCube extends SequentialCommandGroup{
                 new RotateWristCmd(wristSubsystem, Units.degreesToRadians(0.0))));
         addCommands(
             new IntakeForwardCmd(intakeSubsystem));
-
     }
     
 }

@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.intake.IntakeForwardCmd;
 import frc.robot.commands.intake.IntakeHoldCmd;
 import frc.robot.commands.routines.StowCmd;
+import frc.robot.commands.routines.loading.DoubleSubstationCone;
+import frc.robot.commands.routines.loading.DoubleSubstationCube;
+import frc.robot.commands.routines.loading.SingleSubstationCmd;
 import frc.robot.commands.routines.scoring.ScoreHighCmd;
 import frc.robot.commands.routines.scoring.ScoreLowCmd;
 import frc.robot.commands.routines.scoring.ScoreMidCmd;
@@ -55,13 +58,27 @@ public class RobotContainer {
     cmdDriveController.rightBumper().onTrue(new ScoreHighCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     cmdDriveController.y().onTrue(new ScoreMidCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     cmdDriveController.b().onTrue(new ScoreLowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
-    cmdDriveController.a().onTrue(new StowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem, false));
-    // buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armSubsystem));
 
-    if (buttonBox.getX() <= 0.2){
+    buttonBox.button(ButtonBoxButtons.singleSubstation).onTrue(new SingleSubstationCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
+    
+    buttonBox.button(ButtonBoxButtons.doubleSubstation).and(buttonBox.button(ButtonBoxButtons.cubeSwitch)).onTrue(
+      new DoubleSubstationCube(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
+
+    /* LEAVE COMMENTED UNTIL ABLE TO TEST 
+    // TODO: Test this
+    buttonBox.button(ButtonBoxButtons.doubleSubstation).negate().and(buttonBox.button(ButtonBoxButtons.cubeSwitch)).onTrue(
+      new DoubleSubstationCone(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
+    */
+
+    buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem, false));
+
+    if (buttonBox.getX() <= 0.6){
+      buttonBox.button(ButtonBoxButtons.jogUpSwitch).whileTrue(new InstantCommand(() -> wristSubsystem.jogRight()));
+      buttonBox.button(ButtonBoxButtons.jogDownSwitch).whileTrue(new InstantCommand(() -> wristSubsystem.jogLeft()));
+    } else if (buttonBox.getX() > 0.6 && buttonBox.getX() <= 0.8){
       buttonBox.button(ButtonBoxButtons.jogUpSwitch).whileTrue(new InstantCommand(() -> armExtensionSubsystem.jogUp()));
       buttonBox.button(ButtonBoxButtons.jogDownSwitch).whileTrue(new InstantCommand(() -> armExtensionSubsystem.jogDown()));
-    } else if (buttonBox.getX() > 0.2 && buttonBox.getX() <= 0.4){
+    } else if (buttonBox.getX() > 0.8){
       buttonBox.button(ButtonBoxButtons.jogUpSwitch).whileTrue(new InstantCommand(() -> armRotationSubsystem.jogRight()));
       buttonBox.button(ButtonBoxButtons.jogDownSwitch).whileTrue(new InstantCommand(() -> armRotationSubsystem.jogLeft()));
     }

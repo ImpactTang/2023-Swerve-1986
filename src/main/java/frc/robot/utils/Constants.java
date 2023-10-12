@@ -110,8 +110,8 @@ public final class Constants {
         public static final double kMaxAccelerationRateUnitsPerSecond = 5.0;
         public static final double kMaxTurningRateUnitsPerSecond = 5.0;
 
-        public static final double kDriveMaxSpeedMetersPerSecond = 1;
-        public static final double kDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+        public static final double kDriveMaxSpeedMetersPerSecond = 1.0;
+        public static final double kDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
     }
 
     public static final class ModuleConstants{
@@ -187,9 +187,9 @@ public final class Constants {
             public static final int highSwitch = 5;
             public static final int tippedSwitch = 6;
             public static final int cubeSwitch = 7;
-            public static final int station2Button = 8;
+            public static final int singleSubstation = 8;
             public static final int parallelButton = 9;
-            public static final int station1Button = 10;
+            public static final int doubleSubstation = 10;
             public static final int jogDownSwitch = 11;
             public static final int jogUpSwitch = 12;
             public static final int knobAxis = 0;
