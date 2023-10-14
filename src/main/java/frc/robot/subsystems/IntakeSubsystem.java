@@ -19,7 +19,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
     intakeMotor = new CANSparkMax(IntakeConstants.intakeMotorId, MotorType.kBrushless);
     intakeMotor.setIdleMode(IdleMode.kCoast);
-    intakeMotor.setInverted(IntakeConstants.intakeMotorInverted);
+    intakeMotor.setInverted(IntakeConstants.intakeMotorReversed);
     intakeMotor.setSmartCurrentLimit(IntakeConstants.intakeMotorStallCurrentLimit, IntakeConstants.intakeMotorFreeSpinCurrentLimit);
     intakeMotor.setOpenLoopRampRate(IntakeConstants.openLoopRampRate);
     intakeMotor.burnFlash();
@@ -34,7 +34,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void startIntake(){
-    intakeMotor.set(1);
+    intakeMotor.set(0.75);
   }
 
   public void stopIntake(){
@@ -55,6 +55,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void updateSmartDashboard() {
     SmartDashboard.putNumber("Intake Motor Speed", getIntakeMotorSpeed());
+    SmartDashboard.putNumber("Intake Motor Encoder Position", intakeMotorEncoder.getPosition());
   }
 
 }

@@ -3,27 +3,29 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
 
-public class IntakeStopCmd extends CommandBase{
+public class IntakeMoveCmd extends CommandBase{
 
     private final IntakeSubsystem intakeSubsystem;
+    private double intakeSpeed;
 
-
-    public IntakeStopCmd(IntakeSubsystem intakeSubsystem){
+    public IntakeMoveCmd(IntakeSubsystem intakeSubsystem, double intakeSpeed){
         this.intakeSubsystem = intakeSubsystem;
+        this.intakeSpeed = intakeSpeed;
         addRequirements(intakeSubsystem);
     }
 
     @Override
     public void initialize(){
-        intakeSubsystem.stopIntake();
     }
 
     @Override
     public void execute(){
+        intakeSubsystem.setIntakeSpeed(intakeSpeed);
     }
 
     @Override
     public void end(boolean interrupted){
+        intakeSubsystem.stopIntake();
     }
 
     @Override
