@@ -33,21 +33,11 @@ public class SwerveModule{
     private final double absoluteEncoderOffsetRad;
     private final boolean absoluteEncoderReversed;
 
-<<<<<<< HEAD
     public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turnMotorReversed, double moduleWheelOffset, int turnCanCoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed, String name){
         
         this.moduleName = name;
 
         this.moduleWheelOffset = moduleWheelOffset;
-=======
-    private final double moduleChassisOffset;
-
-    public SwerveModule(int driveMotorId, int turnMotorId, boolean driveMotorReversed, boolean turnMotorReversed, double moduleChassisOffset, int turnCanCoderId, double absoluteEncoderOffsetRad, boolean absoluteEncoderReversed, String name){
-        
-        this.moduleName = name;
-
-        this.moduleChassisOffset = moduleChassisOffset;
->>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
         this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
         this.absoluteEncoderReversed = absoluteEncoderReversed;
 
@@ -95,11 +85,7 @@ public class SwerveModule{
     }
 
     public double getTurningPosition(){
-<<<<<<< HEAD
         return turnMotor.getSelectedSensorPosition() * ModuleConstants.kTurningMotorRot2Rad + moduleWheelOffset;
-=======
-        return turnMotor.getSelectedSensorPosition() * ModuleConstants.kTurningMotorRot2Rad + moduleChassisOffset;
->>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
     }
 
     public double getDriveVelocity(){
@@ -111,7 +97,7 @@ public class SwerveModule{
     }
 
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition() + moduleChassisOffset));
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
     }
 
     public void setDesiredState(SwerveModuleState desiredState){
@@ -122,25 +108,14 @@ public class SwerveModule{
             return;
         }
 
-<<<<<<< HEAD
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
         driveMotor.set(TalonFXControlMode.PercentOutput, desiredState.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         turnMotor.set(TalonFXControlMode.PercentOutput, turningPidController.calculate(getTurningPosition(), desiredState.angle.getRadians() + moduleWheelOffset));
         SmartDashboard.putString("Swerve["+moduleName+"] state", desiredState.toString());
-=======
-        SwerveModuleState correctedState = new SwerveModuleState();
-        correctedState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
-        correctedState.angle = desiredState.angle.plus(Rotation2d.fromRadians(moduleChassisOffset));
-
-        correctedState = SwerveModuleState.optimize(correctedState, getPosition().angle);
-        driveMotor.set(TalonFXControlMode.PercentOutput, correctedState.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        turnMotor.set(TalonFXControlMode.PercentOutput, turningPidController.calculate(getTurningPosition(), correctedState.angle.getRadians()));
-        SmartDashboard.putString("Swerve["+moduleName+"] state", correctedState.toString());
->>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
     }
 
     public SwerveModulePosition getPosition(){
-        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition() + moduleChassisOffset));
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
     public Rotation2d getCanCoder(){
@@ -148,7 +123,7 @@ public class SwerveModule{
     }
 
     public void update(){
-        SmartDashboard.putNumber(moduleName + "Absolute-Position", turnCanCoder.getAbsolutePosition() - moduleChassisOffset);
+        SmartDashboard.putNumber(moduleName + "Absolute-Position", turnCanCoder.getAbsolutePosition() + moduleWheelOffset);
     }
 
     public double getAbsoluteEncoderRad(){

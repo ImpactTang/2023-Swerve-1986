@@ -138,6 +138,7 @@ public final class Constants {
             public static final int turnMotorId = 05;
             public static final boolean driveMotorReversed = false;
             public static final boolean turnMotorReversed = false;
+            public static final double moduleWheelOffset = 0.0;
             public static final int turnCanCoderId = 12;
             public static final double absoluteEncoderOffsetRad = 0;
             public static final boolean absoluteEncoderReversed = false;
@@ -149,6 +150,7 @@ public final class Constants {
             public static final int turnMotorId = 01;
             public static final boolean driveMotorReversed = false;
             public static final boolean turnMotorReversed = false;
+            public static final double moduleWheelOffset = Math.PI;
             public static final int turnCanCoderId = 10;
             public static final double absoluteEncoderOffsetRad = 0;
             public static final boolean absoluteEncoderReversed = false;
@@ -160,6 +162,7 @@ public final class Constants {
             public static final int turnMotorId = 07;
             public static final boolean driveMotorReversed = false;
             public static final boolean turnMotorReversed = false;
+            public static final double moduleWheelOffset = 0.0;
             public static final int turnCanCoderId = 13;
             public static final double absoluteEncoderOffsetRad = 0;
             public static final boolean absoluteEncoderReversed = false;
@@ -171,6 +174,7 @@ public final class Constants {
             public static final int turnMotorId = 03;
             public static final boolean driveMotorReversed = false;
             public static final boolean turnMotorReversed = false;
+            public static final double moduleWheelOffset = Math.PI;
             public static final int turnCanCoderId = 11;
             public static final double absoluteEncoderOffsetRad = 0;
             public static final boolean absoluteEncoderReversed = false;
