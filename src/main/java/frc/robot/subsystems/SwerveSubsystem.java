@@ -1,3 +1,7 @@
+/*
+ * Swerve Drive Subsystem
+ */
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.Pigeon2;
@@ -14,7 +18,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.utils.Constants.DriveConstants;
 import frc.robot.utils.Constants.ModuleConstants.*;
 
+
 public class SwerveSubsystem extends SubsystemBase {
+
+    /* --------------------> Initializing the Swerve Modules <-------------------- */
 
     private final SwerveModule frontLeft = new SwerveModule(
         FrontLeftModule.driveMotorId, FrontLeftModule.turnMotorId,
@@ -45,22 +52,32 @@ public class SwerveSubsystem extends SubsystemBase {
 
     public SwerveDriveOdometry swerveDriveOdometry;
     
+
+    /* --------------------> Swerve Drive Constructor <-------------------- */
+
     public SwerveSubsystem() {
 
+        // Config Gyro
         gyro.configFactoryDefault();
         gyro.setYaw(0);
 
+        // Reset Encoders
         resetModuleEncoders();
 
+        // Configure the odometry
         swerveDriveOdometry = new SwerveDriveOdometry(DriveConstants.kSwerveDriveKinematics, 
         getRotation2d(), getModulePositions());
         
     }
 
+    /* --------------------> Periodic Updates <-------------------- */
     @Override
     public void periodic(){
+
+        // Update the odometry to the current module positions and heading
         swerveDriveOdometry.update(getRotation2d(), getModulePositions());
 
+        // Update SmartDashboard data for the robot heading and location
         SmartDashboard.putNumber("Robot Heading", gyro.getYaw());
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 
@@ -71,10 +88,13 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.update();
     }
 
+    // Get the Rotation2d of the Robot
     public Rotation2d getRotation2d(){
         return Rotation2d.fromDegrees(gyro.getYaw());
     }
 
+
+    /* --------------------> Set the Swerve Module States <-------------------- */
     public void setModuleStates(SwerveModuleState[] desiredStates){
 
         // Makes sure movement is valid
@@ -87,6 +107,7 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.setDesiredState(desiredStates[3]);
     }
 
+    /* --------------------> Get the Swerve Module Positions <-------------------- */
     public SwerveModulePosition[] getModulePositions() {
         return( new SwerveModulePosition[]{
             frontLeft.getPosition(),
@@ -95,10 +116,13 @@ public class SwerveSubsystem extends SubsystemBase {
             backRight.getPosition()});
     }
 
+    // Get the current Pose2d of the robot
     public Pose2d getPose(){
         return swerveDriveOdometry.getPoseMeters();
     }
 
+
+    /* --------------------> Reset the Swerve Drive Odometry <-------------------- */
     public void resetOdometry(Pose2d pose){
         swerveDriveOdometry.resetPosition(getRotation2d(), getModulePositions(), pose);
     }
@@ -107,10 +131,12 @@ public class SwerveSubsystem extends SubsystemBase {
         swerveDriveOdometry.resetPosition(rotation, getModulePositions(), pose);
     }
 
+    // Reset the gyro heading
     public void resetHeading(){
         gyro.setYaw(0);
     }
     
+    // Reset the module encoders
     public void resetModuleEncoders(){
         frontLeft.resetEncoders();
         frontRight.resetEncoders();
@@ -118,6 +144,7 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.resetEncoders();
     }
 
+    // Stop the swerve drive
     public void stopSwerve(){
         frontLeft.stop();
         frontRight.stop();

@@ -10,6 +10,8 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
+    /* --------------------> Wrist Constants <-------------------- */
+
     public static final class WristConstants{
 
         // TODO: ADJUST CONSTANTS
@@ -39,6 +41,8 @@ public final class Constants {
 
     }
 
+    /* --------------------> Intake Constants <-------------------- */
+
     public static final class IntakeConstants{
 
         // TODO: ADJUST CONSTANTS
@@ -48,6 +52,8 @@ public final class Constants {
         public static final boolean intakeMotorReversed = false;
         public static final double openLoopRampRate = 1.0;
     }
+
+    /* --------------------> Arm Constants <-------------------- */
 
     public static final class ArmConstants{
 
@@ -98,17 +104,21 @@ public final class Constants {
         public static final double extensionMaxAcc = 1000;
     }
 
+    /* --------------------> Swerve Drive Constants <-------------------- */
+
     public static final class DriveConstants{
 
         public static final double kTrackWidth = 16; // Distance between centers of right and left wheels on robot (Width, X)
         public static final double kWheelBase = 23.5; // Distance between centers of front and back wheels on robot (Length, Y)
 
+        // Swerve Drive Kinematics
         public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kTrackWidth / 2, kWheelBase / 2), // Front Left
             new Translation2d(-kTrackWidth / 2, kWheelBase / 2), // Front Right
             new Translation2d(kTrackWidth / 2, -kWheelBase / 2), // Back Left
             new Translation2d(-kTrackWidth / 2, -kWheelBase / 2)); // Back Right
 
+        // Max Speed of Robot
         public static final double kPhysicalMaxSpeedMetersPerSecond = 5.0;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
         public static final double kMaxAccelerationRateUnitsPerSecond = 5.0;
@@ -117,6 +127,8 @@ public final class Constants {
         public static final double kDriveMaxSpeedMetersPerSecond = 1.0;
         public static final double kDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 8;
     }
+
+    /* --------------------> Swerve Modules Constants <-------------------- */
 
     public static final class ModuleConstants{
 
@@ -127,11 +139,12 @@ public final class Constants {
         public static final double kTurningMotorRot2Rad = (Math.PI * 2) / (2048 / kTurningMotorGearRatio);
         public static final double kDriveVelocity2MeterPerSec = kDriveMotorRot2Meter / 60;
         public static final double kTurningVelocity2RadPerSec = kTurningMotorRot2Rad / 60;
-        public static final double kPTurning = 0.5;
 
         public static final double kModuleP = 0.5;
         public static final double kModuleI = 0;
         public static final double kModuleD = 0;
+
+        /* --------------------> Front Left Module Constants <-------------------- */
 
         public static final class FrontLeftModule{
             public static final int driveMotorId = 04;
@@ -145,6 +158,8 @@ public final class Constants {
             public static final String name = "Front Left";
         }
 
+        /* --------------------> Front Right Module Constants <-------------------- */
+
         public static final class FrontRightModule{
             public static final int driveMotorId = 00;
             public static final int turnMotorId = 01;
@@ -157,6 +172,8 @@ public final class Constants {
             public static final String name = "Front Right";
         }
 
+        /* --------------------> Back Left Module Constants <-------------------- */
+        
         public static final class BackLeftModule{
             public static final int driveMotorId = 06;
             public static final int turnMotorId = 07;
@@ -168,6 +185,8 @@ public final class Constants {
             public static final boolean absoluteEncoderReversed = false;
             public static final String name = "Back Left";
         }
+
+        /* --------------------> Back Right Module Constants <-------------------- */
 
         public static final class BackRightModule{
             public static final int driveMotorId = 02;
@@ -183,9 +202,13 @@ public final class Constants {
 
     }
 
+    /* --------------------> Controller Constants <-------------------- */
+
     public static final class IOConstants{
 
         public static final double kDeadband = 0.05;
+
+        /* --------------------> Button Box Buttons <-------------------- */
 
         public static final class ButtonBoxButtons{
             public static final int straightUpButton = 1;
