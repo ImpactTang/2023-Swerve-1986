@@ -25,21 +25,23 @@ import frc.robot.utils.Constants.IOConstants.ButtonBoxButtons;
 
 public class RobotContainer {
 
+  /* --------------------> Subsystems <-------------------- */
+
   private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   private final ArmRotationSubsystem armRotationSubsystem = new ArmRotationSubsystem();
   private final ArmExtensionSubsystem armExtensionSubsystem = new ArmExtensionSubsystem();
   private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   private final WristSubsystem wristSubsystem = new WristSubsystem();
 
-  private final CommandXboxController cmdDriveController = new CommandXboxController(0);
+  /* --------------------> Joysticks <-------------------- */
 
-  /* NOTE: BUTTON BOX BUTTONS START AT 1!!! */
-  private final CommandJoystick buttonBox = new CommandJoystick(1);  
+  private final CommandJoystick buttonBox = new CommandJoystick(1); // Button Box
+  private final CommandXboxController cmdDriveController = new CommandXboxController(0); // Driver Xbox Controller
 
   public RobotContainer() {
-
-    // Xbox Controller Driving
     
+    /* --------------------> Swerve Drive <-------------------- */
+
     swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(swerveSubsystem,
     () -> -cmdDriveController.getRawAxis(0), // Axis 0 = Left X Stick
     () -> -cmdDriveController.getRawAxis(1), // Axis 1 = Left Y Stick
@@ -50,7 +52,12 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+
+    /* --------------------> Driver Controller Buttons <-------------------- */
+
     cmdDriveController.leftBumper().onTrue(new InstantCommand(() -> swerveSubsystem.resetHeading()));
+
+    /* --------------------> TODO: Testing Buttons to be Removed <-------------------- */
 
     cmdDriveController.x().onTrue(new IntakeForwardCmd(intakeSubsystem));
     cmdDriveController.x().onFalse(new IntakeHoldCmd(intakeSubsystem));
@@ -59,19 +66,25 @@ public class RobotContainer {
     cmdDriveController.y().onTrue(new ScoreMidCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     cmdDriveController.b().onTrue(new ScoreLowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
 
+    /* --------------------> Button Box Buttons <-------------------- */
+
+    // Single Substation
     buttonBox.button(ButtonBoxButtons.singleSubstation).onTrue(new SingleSubstationCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     
+    // Double Substation Cube
     buttonBox.button(ButtonBoxButtons.doubleSubstation).and(buttonBox.button(ButtonBoxButtons.cubeSwitch)).onTrue(
-      new DoubleSubstationCube(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
+      new DoubleSubstationCube(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem)); // Double Substation Cube
 
-    /* LEAVE COMMENTED UNTIL ABLE TO TEST 
-    // TODO: Test this
+    /*  TODO: Test this
+    * Double Substation Cone
     buttonBox.button(ButtonBoxButtons.doubleSubstation).negate().and(buttonBox.button(ButtonBoxButtons.cubeSwitch)).onTrue(
       new DoubleSubstationCone(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem));
     */
 
+    // Stow
     buttonBox.button(ButtonBoxButtons.straightUpButton).onTrue(new StowCmd(armRotationSubsystem, armExtensionSubsystem, wristSubsystem, intakeSubsystem, false));
 
+    // Subsystem Jog Selector
     if (buttonBox.getX() <= 0.6){
       buttonBox.button(ButtonBoxButtons.jogUpSwitch).whileTrue(new InstantCommand(() -> wristSubsystem.jogRight()));
       buttonBox.button(ButtonBoxButtons.jogDownSwitch).whileTrue(new InstantCommand(() -> wristSubsystem.jogLeft()));
@@ -83,6 +96,8 @@ public class RobotContainer {
       buttonBox.button(ButtonBoxButtons.jogDownSwitch).whileTrue(new InstantCommand(() -> armRotationSubsystem.jogLeft()));
     }
   }
+
+  /* --------------------> Autonomous Commands <-------------------- */
 
   public Command getAutonomousCommand() {
     

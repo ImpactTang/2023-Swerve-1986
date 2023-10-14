@@ -19,21 +19,25 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
         FrontLeftModule.driveMotorId, FrontLeftModule.turnMotorId,
         FrontLeftModule.driveMotorReversed, FrontLeftModule.turnMotorReversed,
+        FrontLeftModule.moduleWheelOffset,
         FrontLeftModule.turnCanCoderId, FrontLeftModule.absoluteEncoderOffsetRad,
         FrontLeftModule.absoluteEncoderReversed, FrontLeftModule.name);
     private final SwerveModule frontRight = new SwerveModule(
         FrontRightModule.driveMotorId, FrontRightModule.turnMotorId,
         FrontRightModule.driveMotorReversed, FrontRightModule.turnMotorReversed,
+        FrontRightModule.moduleWheelOffset,
         FrontRightModule.turnCanCoderId, FrontRightModule.absoluteEncoderOffsetRad,
         FrontRightModule.absoluteEncoderReversed, FrontRightModule.name);
     private final SwerveModule backLeft = new SwerveModule(
         BackLeftModule.driveMotorId, BackLeftModule.turnMotorId,
         BackLeftModule.driveMotorReversed, BackLeftModule.turnMotorReversed,
+        BackLeftModule.moduleWheelOffset,
         BackLeftModule.turnCanCoderId, BackLeftModule.absoluteEncoderOffsetRad,
         BackLeftModule.absoluteEncoderReversed, BackLeftModule.name);
     private final SwerveModule backRight = new SwerveModule(
         BackRightModule.driveMotorId, BackRightModule.turnMotorId,
         BackRightModule.driveMotorReversed, BackRightModule.turnMotorReversed,
+        BackRightModule.moduleWheelOffset,
         BackRightModule.turnCanCoderId, BackRightModule.absoluteEncoderOffsetRad,
         BackRightModule.absoluteEncoderReversed, BackRightModule.name);
 
