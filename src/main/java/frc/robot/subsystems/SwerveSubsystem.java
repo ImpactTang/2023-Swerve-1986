@@ -19,25 +19,41 @@ public class SwerveSubsystem extends SubsystemBase {
     private final SwerveModule frontLeft = new SwerveModule(
         FrontLeftModule.driveMotorId, FrontLeftModule.turnMotorId,
         FrontLeftModule.driveMotorReversed, FrontLeftModule.turnMotorReversed,
+<<<<<<< HEAD
         FrontLeftModule.moduleWheelOffset,
+=======
+        FrontLeftModule.moduleChassisOffset,
+>>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
         FrontLeftModule.turnCanCoderId, FrontLeftModule.absoluteEncoderOffsetRad,
         FrontLeftModule.absoluteEncoderReversed, FrontLeftModule.name);
     private final SwerveModule frontRight = new SwerveModule(
         FrontRightModule.driveMotorId, FrontRightModule.turnMotorId,
         FrontRightModule.driveMotorReversed, FrontRightModule.turnMotorReversed,
+<<<<<<< HEAD
         FrontRightModule.moduleWheelOffset,
+=======
+        FrontRightModule.moduleChassisOffset,
+>>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
         FrontRightModule.turnCanCoderId, FrontRightModule.absoluteEncoderOffsetRad,
         FrontRightModule.absoluteEncoderReversed, FrontRightModule.name);
     private final SwerveModule backLeft = new SwerveModule(
         BackLeftModule.driveMotorId, BackLeftModule.turnMotorId,
         BackLeftModule.driveMotorReversed, BackLeftModule.turnMotorReversed,
+<<<<<<< HEAD
         BackLeftModule.moduleWheelOffset,
+=======
+        BackLeftModule.moduleChassisOffset,
+>>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
         BackLeftModule.turnCanCoderId, BackLeftModule.absoluteEncoderOffsetRad,
         BackLeftModule.absoluteEncoderReversed, BackLeftModule.name);
     private final SwerveModule backRight = new SwerveModule(
         BackRightModule.driveMotorId, BackRightModule.turnMotorId,
         BackRightModule.driveMotorReversed, BackRightModule.turnMotorReversed,
+<<<<<<< HEAD
         BackRightModule.moduleWheelOffset,
+=======
+        BackRightModule.moduleChassisOffset,
+>>>>>>> 54714e9a3bf8a9c32020924cee1bb8e04f1a1abb
         BackRightModule.turnCanCoderId, BackRightModule.absoluteEncoderOffsetRad,
         BackRightModule.absoluteEncoderReversed, BackRightModule.name);
 
